@@ -4,12 +4,25 @@
 
 <script>
   import HomeNavBar from "../../components/content/HomeNavBar";
+  import {getHomeMultidata} from "../../network/home";
+
   export default {
     name: "Home",
+    data() {
+      return {
+        homeBanners: [],
+        homeRecommends: []
+      }
+    },
     components: {HomeNavBar},
-    comments: {
-      HomeNavBar
+    created() {
+      getHomeMultidata().then(res => {
+        console.log(res.data);
+        this.homeBanners = res.data.banner.list;
+        this.homeRecommends = res.data.recommend.list;
+      })
     }
+
   }
 </script>
 

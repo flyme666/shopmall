@@ -1,6 +1,6 @@
 import axios from 'axios'
 import url from '@/common/api'
-
+//需要api接口请联系微信coderwhy003
 export function request(config) {
   const instance =axios.create({
     baseURL: url,
