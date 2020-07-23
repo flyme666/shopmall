@@ -1,5 +1,5 @@
 import axios from 'axios'
-import url from '@/common/const'
+import url from '@/common/api'
 
 export function request(config) {
   const instance =axios.create({
