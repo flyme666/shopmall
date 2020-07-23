@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import NavBar from "../common/navbar/NavBar";
+  import NavBar from "../../../components/common/navbar/NavBar";
   export default {
     name: "HomeNavBar",
     components: {
