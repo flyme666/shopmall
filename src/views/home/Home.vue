@@ -2,7 +2,7 @@
   <div id="home">
     <home-nav-bar></home-nav-bar>
     <home-swiper :banners="homeBanners"></home-swiper>
-    <home-recommend-view :recommends="homeRecommends"></home-recommend-view>
+    <home-recommend-view :recommends="homeRecommends" ></home-recommend-view>
   </div>
 </template>
 
