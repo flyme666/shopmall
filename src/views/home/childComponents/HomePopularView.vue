@@ -1,6 +1,6 @@
 <template>
   <div class="popular">
-    <a href="http://act.mogujie.com/zzlx67">
+    <a href="http://m.jd.com">
       <img src="../../../assets/img/home/recommend_bg.jpg" alt="">
     </a>
   </div>

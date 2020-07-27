@@ -1,11 +1,15 @@
 <template>
   <div id="home">
     <home-nav-bar></home-nav-bar>
-    <home-swiper :banners="homeBanners"></home-swiper>
-    <home-recommend-view :recommends="homeRecommends" ></home-recommend-view>
-    <home-popular-view></home-popular-view>
-    <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></tab-control>
-    <goods-list :goodslist="showGoods"></goods-list>
+    <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true"
+            @scroll="contentScroll" @pullingUp="loadMore">
+      <home-swiper :banners="homeBanners"></home-swiper>
+      <home-recommend-view :recommends="homeRecommends" ></home-recommend-view>
+      <home-popular-view></home-popular-view>
+      <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></tab-control>
+      <goods-list :goodslist="showGoods"></goods-list>
+    </scroll >
+    <back-top @click.native="backTopClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -15,8 +19,10 @@
   import HomePopularView from "./childComponents/HomePopularView";
   import HomeRecommendView from "./childComponents/HomeRecommendView";
 
-  import TabControl from "../../components/content/TabControl/TabControl";
-  import GoodsList from "../../components/content/Goods/GoodsList";
+  import Scroll from "../../components/common/scroll/Scroll";
+  import TabControl from "../../components/content/tabcontrol/TabControl";
+  import GoodsList from "../../components/content/goods/GoodsList";
+  import BackTop from "../../components/content/backtop/BackTop";
 
   import {getHomeMultidata,getHomeGoodsdata} from "../../network/home";
 
@@ -28,7 +34,9 @@
       HomeRecommendView,
       HomePopularView,
       TabControl,
-      GoodsList
+      GoodsList,
+      Scroll,
+      BackTop
     },
     data() {
       return {
@@ -39,7 +47,8 @@
           'new': {page: 0, list:[] },
           'sell': {page: 0, list:[] },
         },
-        currentType: 'pop'
+        currentType: 'pop',
+        isShowBackTop: false
       }
     },
     computed: {
@@ -49,7 +58,6 @@
     },
     methods: {
       tabClick(index){
-        console.log(index)
         switch (index) {
           case 0:
             this.currentType = 'pop'
@@ -60,10 +68,17 @@
           case 2:
             this.currentType = 'sell'
             break
-
         }
       },
-
+      backTopClick() {
+        this.$refs.scroll.scrollTo(0,0,500)
+      },
+      contentScroll(position) {
+        this.isShowBackTop = (-position.y) >1000
+      },
+      loadMore() {
+        this.getGoodsdata(this.currentType)
+      },
 
       getMultidata(){
         getHomeMultidata().then(res => {
@@ -76,6 +91,7 @@
         getHomeGoodsdata(type,page).then(res => {
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
+          this.$refs.scroll.finishPullingUp()
         })
       }
 
@@ -94,6 +110,18 @@
   .tab-control {
     position: sticky;
     top: 44px;
+  }
+  #home {
+    position: relative;
+    height: 100vh;
+  }
+  .content {
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    bottom: 50px;
+    left: 0px;
+    right: 0px;
   }
 
 </style>
