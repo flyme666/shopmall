@@ -1,12 +1,15 @@
 <template>
   <div id="home">
     <home-nav-bar></home-nav-bar>
+    <tab-control v-show="isFixed" ref="tabcontrol" :titles="['流行','新款','精选']"
+                 @tabClick="tabClick" :class="{fixed:isFixed}"></tab-control>
     <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true"
             @scroll="contentScroll" @pullingUp="loadMore">
-      <home-swiper :banners="homeBanners"></home-swiper>
+      <home-swiper :banners="homeBanners" @swipperImageIsLoaded="swiperImageLoaded"></home-swiper>
       <home-recommend-view :recommends="homeRecommends" ></home-recommend-view>
       <home-popular-view></home-popular-view>
-      <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></tab-control>
+      <tab-control ref="tabcontrol" :titles="['流行','新款','精选']"
+                   @tabClick="tabClick" :class="{fixed:isFixed}"></tab-control>
       <goods-list :goodslist="showGoods"></goods-list>
     </scroll >
     <back-top @click.native="backTopClick" v-show="isShowBackTop"></back-top>
@@ -25,6 +28,7 @@
   import BackTop from "../../components/content/backtop/BackTop";
 
   import {getHomeMultidata,getHomeGoodsdata} from "../../network/home";
+  import {debounce} from "../../common/utils";
 
   export default {
     name: "Home",
@@ -48,7 +52,9 @@
           'sell': {page: 0, list:[] },
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0,
+        isFixed:false
       }
     },
     computed: {
@@ -74,10 +80,14 @@
         this.$refs.scroll.scrollTo(0,0,500)
       },
       contentScroll(position) {
-        this.isShowBackTop = (-position.y) >1000
+        this.isShowBackTop = (-position.y) > 1000
+        this.isFixed = (-position.y) > this.tabOffsetTop
       },
       loadMore() {
         this.getGoodsdata(this.currentType)
+      },
+      swiperImageLoaded() {
+        this.tabOffsetTop = this.$refs.tabcontrol.$el.offsetTop
       },
 
       getMultidata(){
@@ -93,7 +103,7 @@
           this.goods[type].page += 1
           this.$refs.scroll.finishPullingUp()
         })
-      }
+      },
 
     },
     created() {
@@ -101,16 +111,18 @@
       this.getGoodsdata('pop')
       this.getGoodsdata('new')
       this.getGoodsdata('sell')
+    },
+    mounted() {
+      const refresh = debounce(this.$refs.scroll.refresh,50)
+      this.$bus.$on('imageIsLoaded',() => {
+        refresh()
+      })
     }
 
   }
 </script>
 
 <style scoped>
-  .tab-control {
-    position: sticky;
-    top: 44px;
-  }
   #home {
     position: relative;
     height: 100vh;
@@ -118,10 +130,14 @@
   .content {
     overflow: hidden;
     position: absolute;
-    top: 0px;
+    top: 44px;
     bottom: 50px;
     left: 0px;
     right: 0px;
+  }
+  .fixed {
+    position: relative;
+    z-index: 2;
   }
 
 </style>

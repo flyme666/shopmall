@@ -2,7 +2,7 @@
   <swiper class="swipe">
     <swiper-item v-for="item in banners" :key="item.id" >
       <a :href="item.link">
-        <img :src="item.image" alt="">
+        <img :src="item.image" alt="" @load="imageLoad">
       </a>
     </swiper-item>
 
@@ -22,16 +22,26 @@
         }
       }
     },
+    data() {
+      return {
+        isLoad: false
+      }
+    },
     components: {
       Swiper,
       SwiperItem
+    },
+    methods: {
+      imageLoad() {
+        if(!this.isLoad){
+          this.$emit('swipperImageIsLoaded')
+          this.isLoad = !this.isLoad
+        }
+      }
     }
   }
 </script>
 
 <style scoped>
-  .swipe{
-    padding-top: 44px;
-  }
 
 </style>

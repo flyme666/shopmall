@@ -18,10 +18,7 @@
 
 <style scoped>
   .home-navbar{
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 2;
+    position: relative;
+    z-index: 9;
   }
 </style>
