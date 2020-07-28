@@ -47,14 +47,15 @@
         homeBanners: [],
         homeRecommends: [],
         goods: {
-          'pop': {page: 0, list:[] },
-          'new': {page: 0, list:[] },
-          'sell': {page: 0, list:[] },
+          'pop': {page: 0, list:[], y: 0},
+          'new': {page: 0, list:[], y: 0 },
+          'sell': {page: 0, list:[], y: 0 },
         },
         currentType: 'pop',
         isShowBackTop: false,
         tabOffsetTop: 0,
-        isFixed:false
+        isFixed:false,
+        scrollY: 0
       }
     },
     computed: {
@@ -64,6 +65,7 @@
     },
     methods: {
       tabClick(index){
+        this.goods[this.currentType].y = this.$refs.scroll.getScrollY()
         switch (index) {
           case 0:
             this.currentType = 'pop'
@@ -75,6 +77,8 @@
             this.currentType = 'sell'
             break
         }
+        this.$refs.scroll.scrollTo(0,this.goods[this.currentType].y,0)
+        this.$refs.scroll.refresh()
       },
       backTopClick() {
         this.$refs.scroll.scrollTo(0,0,500)
@@ -88,6 +92,9 @@
       },
       swiperImageLoaded() {
         this.tabOffsetTop = this.$refs.tabcontrol.$el.offsetTop
+        this.goods['pop'].y = -this.tabOffsetTop
+        this.goods['new'].y = -this.tabOffsetTop
+        this.goods['sell'].y = -this.tabOffsetTop
       },
 
       getMultidata(){
@@ -117,6 +124,13 @@
       this.$bus.$on('imageIsLoaded',() => {
         refresh()
       })
+    },
+    activated() {
+      this.$refs.scroll.scrollTo(0,this.scrollY,0)
+      this.$refs.scroll.refresh()
+    },
+    deactivated() {
+      this.scrollY = this.$refs.scroll.getScrollY()
     }
 
   }

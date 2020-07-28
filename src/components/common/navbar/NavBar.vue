@@ -1,7 +1,7 @@
 <template>
   <div class="nav-bar" :style="{'background': bgColor,'color':color}">
     <div class="navbar-left">
-      <slot name="lfet"></slot>
+      <slot name="left"></slot>
     </div>
     <div class="navbar-center">
       <slot name="center"></slot>

@@ -38,6 +38,5 @@
 
 <style scoped>
   .main-tab-bar{
-    z-index: 9;
   }
 </style>
