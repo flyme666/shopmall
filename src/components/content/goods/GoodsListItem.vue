@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="goods.show.img" alt="" @load="imageLoad">
+    <img :src="showImage" alt="" @load="imageLoad">
     <div class="goods-title">
       <p >{{goods.title}}</p>
       <span class="price">{{goods.price}}</span>
@@ -22,6 +22,11 @@
         }
       }
     },
+    computed: {
+      showImage() {
+        return this.goods.image || this.goods.show.img
+      }
+    },
     methods: {
       imageLoad() {
         this.$bus.$emit('imageIsLoaded')
@@ -30,7 +35,7 @@
         this.$router.push({
           path: '/detail',
           query: {
-            id: this.goods.iid
+            id: this.goods.iid ? this.goods.iid : "1m70y5k"
           }
         })
       }

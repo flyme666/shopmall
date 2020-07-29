@@ -32,7 +32,7 @@
     },
     methods: {
       imageLoad() {
-        this.$bus.$emit('imagesIsLoaded')
+        this.$bus.$emit('imageIsLoaded')
       }
     }
   }

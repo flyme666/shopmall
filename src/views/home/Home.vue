@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <home-nav-bar></home-nav-bar>
-    <tab-control v-show="isFixed" ref="tabcontrol" :titles="['流行','新款','精选']"
+    <tab-control v-show="isFixed" ref="topTabcontrol" :titles="['流行','新款','精选']"
                  @tabClick="tabClick" :class="{fixed:isFixed}"></tab-control>
     <scroll class="content" ref="scroll" :probe-type="3" :pull-up-load="true"
             @scroll="contentScroll" @pullingUp="loadMore">
@@ -28,7 +28,7 @@
   import BackTop from "../../components/content/backtop/BackTop";
 
   import {getHomeMultidata,getHomeGoodsdata} from "../../network/home";
-  import {debounce} from "../../common/utils";
+  import {backTopMixin, imgListenerMixin} from "../../common/mixin";
 
   export default {
     name: "Home",
@@ -52,10 +52,9 @@
           'sell': {page: 0, list:[], y: 0 },
         },
         currentType: 'pop',
-        isShowBackTop: false,
         tabOffsetTop: 0,
         isFixed:false,
-        scrollY: 0
+        scrollY: 0,
       }
     },
     computed: {
@@ -63,6 +62,7 @@
         return this.goods[this.currentType].list
       }
     },
+    mixins: [imgListenerMixin,backTopMixin],
     methods: {
       tabClick(index){
         this.goods[this.currentType].y = this.$refs.scroll.getScrollY()
@@ -77,11 +77,12 @@
             this.currentType = 'sell'
             break
         }
-        this.$refs.scroll.scrollTo(0,this.goods[this.currentType].y,0)
+        this.$refs.scroll.scrollTo(0, this.goods[this.currentType].y, 0)
         this.$refs.scroll.refresh()
-      },
-      backTopClick() {
-        this.$refs.scroll.scrollTo(0,0,500)
+        if(this.$refs.topTabcontrol !== undefined) {
+          this.$refs.topTabcontrol.currentIndex = index
+          this.$refs.tabcontrol.currentIndex = index
+        }
       },
       contentScroll(position) {
         this.isShowBackTop = (-position.y) > 1000
@@ -120,10 +121,6 @@
       this.getGoodsdata('sell')
     },
     mounted() {
-      const refresh = debounce(this.$refs.scroll.refresh,50)
-      this.$bus.$on('imageIsLoaded',() => {
-        refresh()
-      })
     },
     activated() {
       this.$refs.scroll.scrollTo(0,this.scrollY,0)
@@ -131,6 +128,7 @@
     },
     deactivated() {
       this.scrollY = this.$refs.scroll.getScrollY()
+      this.$bus.$off('imageIsLoaded',this.imgLoadListener)
     }
 
   }

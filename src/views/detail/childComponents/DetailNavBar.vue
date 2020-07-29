@@ -4,28 +4,41 @@
       <img src="../../../assets/img/common/back.svg" alt="">
     </div>
     <div slot="center">
-      <tab-control :titles="title" class="detail-tab"></tab-control>
+      <div class="tab-control">
+        <div class="tab-control-item"
+             v-for="(item,index) in title"
+             :class="{active: index ===currentIndex}"
+             @click="itemClick(index)">
+          <span>{{item}}</span>
+        </div>
+      </div>
     </div>
   </nav-bar>
 </template>
 
 <script>
   import NavBar from "../../../components/common/navbar/NavBar";
-  import TabControl from "../../../components/content/tabcontrol/TabControl";
   export default {
     name: "DetailNavBar",
     components: {
-      NavBar,
-      TabControl
+      NavBar
     },
     data() {
       return {
-        title: ['商品','参数','评论','推荐']
+        title: ['商品','参数','评论','推荐'],
+        currentIndex: 0
       }
     },
     methods: {
       backClick() {
         this.$router.back()
+      },
+      tabClick(index){
+        this.$emit('tabClick',index)
+      },
+      itemClick(index) {
+        this.currentIndex = index
+        this.$emit('tabClick',this.currentIndex)
       }
     }
   }
@@ -38,6 +51,28 @@
   .back img {
     margin-top: 10px;
     padding-left: 20px;
+  }
+
+  .tab-control {
+    display: flex;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    font-size: 15px;
+    background-color: #fff;
+    z-index: 2;
+  }
+
+  .tab-control-item {
+    flex: 1;
+  }
+
+  .tab-control-item span {
+    padding: 5px;
+  }
+
+  .active {
+    color: var(--color-high-text);
   }
 
 </style>
