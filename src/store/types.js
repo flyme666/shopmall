@@ -1,0 +1,9 @@
+export const ADD_COUNTER = 'addCounter';
+export const ADD_TO_CART = 'addToCart';
+export const SUB_COUNTER = 'subCounter';
+export const SET_CART_DATA = 'setCartData';
+export const SET_CART_GOODS_LIST = "setCartGoodsList";
+export const DELETE_GOOD = 'deleteGood';
+export const DELETE_GOOD_DATA = 'deleteGoodData';
+export const CLEAR_CART_LIST = 'clearCartList';
+export const SET_LOADING = 'setLoading';

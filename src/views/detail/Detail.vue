@@ -10,7 +10,7 @@
       <detail-comment-info :comment-info="commentInfo" class="comment-info" ref="commentInfo"/>
       <goods-list :goodslist="recommendInfo" :is-recommend="true" ref="recommendInfo" class="goods"/>
     </scroll>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
     <back-top @click.native="backTopClick" v-show="isShowBackTop"></back-top>
   </div>
 
@@ -103,7 +103,19 @@
           console.log("请稍等")
         }
         this.$refs.scroll.scrollTo(0,-this.topY[index],200)
+      },
+      addToCart() {
+        const goods = {
+          image: this.topImages[0],
+          title: this.goods.title,
+          desc: this.goods.desc,
+          price: this.goods.lowNowPrice,
+          id: this.id
+        }
+        // console.log(goods);
+        this.$store.dispatch('setCartData', goods)
       }
+
     },
     created() {
       this.getId()

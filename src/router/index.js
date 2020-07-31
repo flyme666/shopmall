@@ -43,6 +43,10 @@ const routes = [
   {
     path: '/detail',
     component: Detail
+  },
+  {
+    path: '*',
+    redirect: '/home'
   }
 ]
 

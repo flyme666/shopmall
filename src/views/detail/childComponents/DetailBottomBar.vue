@@ -31,26 +31,32 @@
     },
     methods: {
       onClickChat() {
-        Toast("点击客服按钮");
+        Toast("点击客服按钮")
       },
       onClickShop() {
-        Toast("点击店铺按钮");
+        Toast("点击店铺按钮")
       },
       startClick() {
         if (!this.isFavorite) {
-          Toast("收藏成功");
-          this.isFavorite = true;
+          Toast("收藏成功")
+          this.isFavorite = true
         } else {
-          Toast("已取消收藏");
-          this.isFavorite = false;
+          Toast("已取消收藏")
+          this.isFavorite = false
         }
       },
       addClick() {
-        Toast("已加入购物车");
-        this.$emit("addCart")
+        Toast("已加入购物车")
+        this.$emit("addToCart")
       },
       buyClick() {
         this.$router.push('/shopcart')
+      }
+    },
+    created() {
+      let list = JSON.parse(localStorage.getItem("cartGoodsList")) || [];
+      if (list) {
+        this.$store.commit("setCartGoodsList", list);
       }
     }
   }
