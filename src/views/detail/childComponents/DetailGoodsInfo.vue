@@ -28,11 +28,20 @@
     },
     data() {
       return {
+        imagesLength: null,
+        count: 0
       }
     },
     methods: {
       imageLoad() {
-        this.$bus.$emit('imageIsLoaded')
+        if(++this.count === this.imagesLength){
+          this.$emit('imgLoaded')
+        }
+      }
+    },
+    watch: {
+      goodsInfo() {
+        this.imagesLength = this.goodsInfo.detailImage[0].list.length;
       }
     }
   }

@@ -6,6 +6,7 @@ import Vue from "vue";
 import {Toast} from "vant";
 
 Vue.use(Toast)
+Toast.setDefaultOptions(loading ,2000)
 
 //需要api接口请联系微信coderwhy003
 export function request(config) {

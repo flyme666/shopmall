@@ -46,5 +46,6 @@
   .navbar-center{
     flex: 1;
     text-align: center;
+    font-weight: bold;
   }
 </style>

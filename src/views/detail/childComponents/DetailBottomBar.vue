@@ -50,6 +50,7 @@
         this.$emit("addToCart")
       },
       buyClick() {
+        this.$emit("addToCart")
         this.$router.push('/shopcart')
       }
     },

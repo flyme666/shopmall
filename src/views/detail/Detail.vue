@@ -5,7 +5,7 @@
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods" class="base-info"/>
       <detail-shop-info :shop-info="shopInfo" class="shop-info"/>
-      <detail-goods-info :goods-info="goodsInfo" class="goods-info" />
+      <detail-goods-info :goods-info="goodsInfo" class="goods-info" @imgLoaded="imgLoaded"/>
       <detail-params-info :params-info="paramsInfo" class="params-info" ref="paramsInfo"/>
       <detail-comment-info :comment-info="commentInfo" class="comment-info" ref="commentInfo"/>
       <goods-list :goodslist="recommendInfo" :is-recommend="true" ref="recommendInfo" class="goods"/>
@@ -32,8 +32,10 @@
   import GoodsList from "../../components/content/goods/GoodsList";
 
   import {getData, getRecommendData, Goods ,Shop } from "../../network/detail";
-  import {debounce} from "../../common/utils";
   import {backTopMixin, imgListenerMixin} from "../../common/mixin";
+  import Vue from "vue";
+  import {Toast} from "vant";
+  Vue.use(Toast)
 
   export default {
     name: "Detail",
@@ -100,7 +102,7 @@
       },
       tabClick(index) {
         if(index !== 0 && this.topY[index] === 0) {
-          console.log("请稍等")
+          Toast("正在加载，请稍等")
         }
         this.$refs.scroll.scrollTo(0,-this.topY[index],200)
       },
@@ -112,8 +114,12 @@
           price: this.goods.lowNowPrice,
           id: this.id
         }
-        // console.log(goods);
         this.$store.dispatch('setCartData', goods)
+      },
+      imgLoaded() {
+          this.topY[1] = this.$refs.paramsInfo.$el.offsetTop
+          this.topY[2] = this.$refs.commentInfo.$el.offsetTop
+          this.topY[3] = this.$refs.recommendInfo.$el.offsetTop
       }
 
     },
@@ -123,12 +129,7 @@
       this.getRecommendData()
     },
     mounted() {
-      const setY = () => {
-        this.topY[1] = this.$refs.paramsInfo.$el.offsetTop
-        this.topY[2] = this.$refs.commentInfo.$el.offsetTop
-        this.topY[3] = this.$refs.recommendInfo.$el.offsetTop
-      }
-      this.$bus.$on('imageIsLoaded',debounce(setY,200))
+
     },
     destroyed() {
       this.$bus.$off('imageIsLoaded',this.imgLoadListener)

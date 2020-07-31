@@ -10,7 +10,7 @@ import {Toast} from "vant";
 Vue.use(Toast)
 Vue.config.productionTip = false
 Vue.use(lazyload,{
-  // loading: require('./assets/img/common/placeholder.png')
+  loading: require('./assets/img/common/placeholder.png')
 })
 Vue.prototype.$bus = new Vue()
 fastclick.attach(document.body)
